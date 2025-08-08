@@ -1,0 +1,82 @@
+.add-to-some {
+	clear: both;
+	margin: 1em 0;
+	list-style-type: none;
+	padding: 0;
+	display: flex;
+	gap: 0;
+	visibility: visible !important;
+	--ats-icon-background: transparent;
+}
+
+.add-to-some__icon a {
+	position: relative;
+	display: block;
+	width: var(--ats-icon-size);
+	height: var(--ats-icon-size);
+	padding: var(--ats-icon-padding);
+}
+
+.add-to-some__icon a::before {
+	content: '';
+	position: absolute;
+	inset: var(--ats-icon-padding);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	background-color: var(--ats-icon-background);
+	border-radius: 4px;
+}
+
+.add-to-some__icon a::after {
+	content: '';
+	position: absolute;
+	inset: var(--ats-icon-padding);
+	background-color: rgba(255, 255, 255, 0.3);
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out;
+}
+
+.add-to-some__icon a:hover::after,
+.add-to-some__icon a:focus::after {
+	opacity: 1;
+}
+
+.add-to-some__icon--pinterest a::before {
+	background-color: #E60023;
+	background-image: url( '../images/pinterest.svg' );
+}
+
+.add-to-some__icon--facebook a::before {
+	background-color: #1877F2;
+	background-image: url( '../images/facebook.svg' );
+}
+
+.add-to-some__icon--x a::before {
+	background-color: #000;
+	background-image: url( '../images/x.svg' );
+}
+
+.add-to-some__icon--pocket a::before {
+	background-color: #EF4444;
+	background-image: url( '../images/pocket.svg' );
+}
+
+.add-to-some__icon--email a::before {
+	background-color: #8E8E93;
+	background-image: url( '../images/email.svg' );
+}
+
+.add-to-some__icon--native a::before {
+	background-color: #2196F3;
+	background-size: auto 80%;
+	background-image: url( '../images/native.svg' );
+}
+
+/* iOS has a different native icon */
+@supports (-webkit-touch-callout: none) {
+	.add-to-some__icon--native a::before {
+		background-color: #007AFF;
+		background-image: url( '../images/native-ios.svg' );
+	}
+}

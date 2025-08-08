@@ -1,0 +1,27 @@
+
+{
+    "name": "xwp/add-to-some",
+    "description": "Performant share buttons for your pages including Pinterest, Facebook, X, Pocket, Email and native sharing.",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "~1.0"
+    },
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "XWP",
+            "email": "technology@xwp.co"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/xwp/add-to-some/issues",
+        "source": "https://github.com/xwp/add-to-some"
+    },
+	"repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/xwp/add-to-some"
+        }
+    ]
+}

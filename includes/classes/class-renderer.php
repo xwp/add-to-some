@@ -1,0 +1,100 @@
+<?php
+/**
+ * Renderer class for AddToSome plugin.
+ *
+ * @package AddToSome
+ * @since 1.0.0
+ */
+
+namespace XWP\AddToSome;
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Renderer class.
+ *
+ * Handles rendering of share buttons markup.
+ */
+class Renderer {
+
+	/**
+	 * Plugin options.
+	 *
+	 * @var array
+	 */
+	private $options;
+
+	/**
+	 * Share buttons instance.
+	 *
+	 * @var ShareButtons
+	 */
+	private $share_buttons;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param array    $options Plugin options.
+	 * @param int|null $post_id Post ID (optional).
+	 */
+	public function __construct( $options, $post_id = null ) {
+		$this->options = $options;
+		$this->share_buttons = new ShareButtons( $options, $post_id );
+	}
+
+	/**
+	 * Render share buttons.
+	 *
+	 * @return string Rendered HTML.
+	 */
+	public function render() {
+		$enabled_buttons = $this->get_enabled_buttons();
+		
+		if ( empty( $enabled_buttons ) ) {
+			return '';
+		}
+
+		$links = $this->share_buttons->generate_links();
+		
+		return $this->build_html( $enabled_buttons, $links );
+	}
+
+	/**
+	 * Get enabled buttons.
+	 *
+	 * @return array Enabled button keys.
+	 */
+	private function get_enabled_buttons() {
+		$enabled = array();
+		
+		foreach ( $this->options['buttons'] as $key => $is_enabled ) {
+			if ( $is_enabled ) {
+				$enabled[] = $key;
+			}
+		}
+		
+		return $enabled;
+	}
+
+	/**
+	 * Build HTML for share buttons.
+	 *
+	 * @param array $enabled_buttons Enabled button keys.
+	 * @param array $links Generated links.
+	 * @return string HTML markup.
+	 */
+	private function build_html( $enabled_buttons, $links ) {
+		$html = '<ul class="add-to-some" style="--ats-icon-size: ' . $this->options['icon_size'] . 'px; --ats-icon-padding: 0.25rem; height: calc( 2 * var(--ats-icon-padding) + var(--ats-icon-size) ); overflow: hidden; visibility: hidden;">';
+		
+		foreach ( $enabled_buttons as $key ) {
+			$html .= '<li class="add-to-some__icon add-to-some__icon--' . $key . '">' . $links[ $key ] . '</li>';
+		}
+		
+		$html .= '</ul>';
+
+		return $html;
+	}
+}

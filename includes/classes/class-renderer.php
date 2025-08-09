@@ -87,7 +87,7 @@ class Renderer {
 	 * @return string HTML markup.
 	 */
 	private function build_html( $enabled_buttons, $links ) {
-		$html = '<ul class="add-to-some" style="--ats-icon-size: ' . $this->options['icon_size'] . 'px; --ats-icon-padding: 0.25rem; height: calc( 2 * var(--ats-icon-padding) + var(--ats-icon-size) ); overflow: hidden; visibility: hidden;">';
+		$html = '<ul class="add-to-some" style="--ats-icon-size: ' . $this->options['icon_size'] . 'px; --ats-icon-padding: 0.25rem; height: calc( ( var(--ats-icon-padding) * 2 ) + var(--ats-icon-size) ); overflow: hidden; visibility: hidden;">';
 		
 		foreach ( $enabled_buttons as $key ) {
 			$html .= '<li class="add-to-some__icon add-to-some__icon--' . $key . '">' . $links[ $key ] . '</li>';

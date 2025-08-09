@@ -130,6 +130,47 @@ class ShareButtons {
 	}
 
 	/**
+	 * Generate LinkedIn share link.
+	 *
+	 * @return string LinkedIn share link HTML.
+	 */
+	private function generate_linkedin_link() {
+		$href = add_query_arg(
+			array(
+				'url' => $this->post_data['permalink'],
+			),
+			'https://www.linkedin.com/sharing/share-offsite/'
+		);
+
+		return sprintf(
+			'<a href="%s" rel="nofollow noopener external" target="_blank" title="%s"></a>',
+			esc_url( $href ),
+			esc_attr__( 'Share on LinkedIn', 'add-to-some' )
+		);
+	}
+
+	/**
+	 * Generate Reddit share link.
+	 *
+	 * @return string Reddit share link HTML.
+	 */
+	private function generate_reddit_link() {
+		$href = add_query_arg(
+			array(
+				'url'   => $this->post_data['permalink'],
+				'title' => $this->post_data['title'],
+			),
+			'https://www.reddit.com/submit'
+		);
+
+		return sprintf(
+			'<a href="%s" rel="nofollow noopener external" target="_blank" title="%s"></a>',
+			esc_url( $href ),
+			esc_attr__( 'Share on Reddit', 'add-to-some' )
+		);
+	}
+
+	/**
 	 * Generate Facebook share link.
 	 *
 	 * @return string Facebook share link HTML.

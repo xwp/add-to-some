@@ -62,6 +62,8 @@ class Settings {
 				'facebook'  => true,
 				'x'         => true,
 				'pocket'    => false,
+				'linkedin'  => false,
+				'reddit'    => false,
 				'email'     => true,
 				'native'    => true,
 			),
@@ -154,7 +156,7 @@ class Settings {
 		}
 
 		$normalized = array();
-		$button_keys = array( 'pinterest', 'facebook', 'x', 'pocket', 'email', 'native' );
+		$button_keys = array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' );
 		
 		foreach ( $button_keys as $key ) {
 			$normalized[ $key ] = ! empty( $buttons[ $key ] );
@@ -209,7 +211,7 @@ class Settings {
 
 		// Map checkboxes to booleans.
 		$buttons = array();
-		foreach ( array( 'pinterest', 'facebook', 'x', 'pocket', 'email', 'native' ) as $key ) {
+		foreach ( array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' ) as $key ) {
 			$buttons[ $key ] = ! empty( $input['buttons'][ $key ] );
 		}
 
@@ -245,6 +247,8 @@ class Settings {
 			'facebook'  => __( 'Facebook', 'add-to-some' ),
 			'x'         => __( 'X', 'add-to-some' ),
 			'pocket'    => __( 'Pocket', 'add-to-some' ),
+			'linkedin'  => __( 'LinkedIn', 'add-to-some' ),
+			'reddit'    => __( 'Reddit', 'add-to-some' ),
 			'email'     => __( 'Email', 'add-to-some' ),
 			'native'    => __( 'Native sharing', 'add-to-some' ),
 		);

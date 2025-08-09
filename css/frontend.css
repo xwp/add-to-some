@@ -64,6 +64,16 @@
 	background-image: url( '../images/pocket.svg' );
 }
 
+.add-to-some__icon--linkedin a::before {
+	background-color: #0A66C2;
+	background-image: url( '../images/linkedin.svg' );
+}
+
+.add-to-some__icon--reddit a::before {
+	background-color: #FF4500;
+	background-image: url( '../images/reddit.svg' );
+}
+
 .add-to-some__icon--email a::before {
 	background-color: #8E8E93;
 	background-image: url( '../images/email.svg' );

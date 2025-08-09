@@ -123,12 +123,22 @@ class Admin {
 	 */
 	public function render_buttons_field() {
 		$options = $this->settings->get_options();
-		$buttons = $this->settings->get_button_types();
+		$button_types = $this->settings->get_button_types();
 
-		echo '<fieldset style="display:grid; gap:10px; max-width:560px">';
+		// Determine render order using saved options.
+		$order = isset( $options['order'] ) && is_array( $options['order'] ) ? $options['order'] : array_keys( $button_types );
+
+		// Hidden input to store order as comma-separated list.
+		$hidden_name  = esc_attr( Settings::OPTION_KEY . '[order]' );
+		$hidden_value = esc_attr( implode( ',', $order ) );
+
+		echo '<input type="hidden" id="xwp-ats-order" name="' . $hidden_name . '" value="' . $hidden_value . '" />';
+		echo '<fieldset id="xwp-ats-buttons" style="display:grid; gap:10px; max-width:560px">';
 		
-		foreach ( $buttons as $key => $label ) {
-			$this->render_button_option( $key, $label, $options );
+		foreach ( $order as $key ) {
+			if ( isset( $button_types[ $key ] ) ) {
+				$this->render_button_option( $key, $button_types[ $key ], $options );
+			}
 		}
 		
 		echo '</fieldset>';
@@ -146,7 +156,8 @@ class Admin {
 		$input_id = 'xwp-ats-btn-' . $key;
 		$field_name = esc_attr( Settings::OPTION_KEY . '[buttons][' . $key . ']' );
 
-		echo '<div class="xwp-ats-row xwp-ats-row-' . esc_attr( $key ) . '">';
+		echo '<div class="xwp-ats-row xwp-ats-row-' . esc_attr( $key ) . '" draggable="true" data-key="' . esc_attr( $key ) . '">';
+		echo '<span class="xwp-ats-handle" aria-label="' . esc_attr__( 'Drag to reorder', 'add-to-some' ) . '" style="cursor:move; user-select:none; margin-right:8px;">↕︎</span> ';
 		
 		printf(
 			'<label><input id="%s" type="checkbox" name="%s" value="1" %s> %s</label>',
@@ -270,7 +281,7 @@ class Admin {
 			'xwp-add-to-some-admin',
 			plugins_url( 'js/admin.js', dirname( __DIR__ ) ),
 			array(),
-			'1.0.0',
+			XWP_ADD_TO_SOME_VERSION,
 			true
 		);
 	}

@@ -125,7 +125,7 @@ class Frontend {
 			'xwp-add-to-some-frontend-style',
 			plugins_url( 'css/frontend.css', dirname( __DIR__ ) ),
 			array(),
-			'1.0.0',
+			XWP_ADD_TO_SOME_VERSION,
 			'print'
 		);
 
@@ -143,7 +143,7 @@ class Frontend {
 			'xwp-add-to-some-frontend',
 			plugins_url( 'js/frontend.js', dirname( __DIR__ ) ),
 			array(),
-			'1.0.0',
+			XWP_ADD_TO_SOME_VERSION,
 			true
 		);
 	}

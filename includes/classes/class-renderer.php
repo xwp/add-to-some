@@ -69,9 +69,10 @@ class Renderer {
 	 */
 	private function get_enabled_buttons() {
 		$enabled = array();
-		
-		foreach ( $this->options['buttons'] as $key => $is_enabled ) {
-			if ( $is_enabled ) {
+		$order = isset( $this->options['order'] ) && is_array( $this->options['order'] ) ? $this->options['order'] : array_keys( $this->options['buttons'] );
+
+		foreach ( $order as $key ) {
+			if ( ! empty( $this->options['buttons'][ $key ] ) ) {
 				$enabled[] = $key;
 			}
 		}

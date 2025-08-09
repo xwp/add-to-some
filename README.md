@@ -16,6 +16,7 @@ A performant, modular WordPress plugin that adds customizable share buttons to y
   - Adjustable icon size (10-300 pixels)
   - Flexible placement (top, bottom, or both)
   - Per-service enable/disable toggles
+  - Reorder enabled buttons via drag-and-drop in the admin
   - Platform-specific configuration
 
 - **Performance Optimized**
@@ -41,7 +42,9 @@ A performant, modular WordPress plugin that adds customizable share buttons to y
 ### Advanced Options
 
 #### Facebook App ID
+
 For enhanced Facebook sharing features:
+
 1. Visit [developers.facebook.com](https://developers.facebook.com/)
 2. Create a new app (Consumer type)
 3. Copy the App ID from your app dashboard
@@ -50,6 +53,7 @@ For enhanced Facebook sharing features:
 Without an App ID, the plugin uses Facebook's basic sharer functionality.
 
 #### X (Twitter) Handle
+
 Add your X handle to include "via @yourhandle" in shared tweets.
 
 ## Architecture
@@ -58,7 +62,7 @@ The plugin follows a modern, object-oriented architecture with clear separation 
 
 ### File Structure
 
-```
+```text
 add-to-some/
 ├── add-to-some.php           # Main plugin file and bootstrapper
 ├── includes/
@@ -89,6 +93,7 @@ add-to-some/
 ### Coding Standards
 
 The plugin adheres to:
+
 - WordPress VIP coding standards
 - PSR-4 autoloading conventions
 - WordPress security best practices
@@ -98,6 +103,7 @@ The plugin adheres to:
 ## Hooks and Filters
 
 ### Actions
+
 - `plugins_loaded` - Plugin initialization
 - `admin_menu` - Settings page registration
 - `admin_enqueue_scripts` - Admin assets
@@ -105,6 +111,7 @@ The plugin adheres to:
 - `init` - Text domain loading
 
 ### Filters
+
 - `the_content` - Button injection (priority 98)
 - `plugin_action_links_*` - Settings link in plugins list
 - `xwp_add_to_some_display_buttons` - Control button visibility
@@ -178,7 +185,14 @@ For issues, feature requests, or contributions, please use the plugin's support 
 
 ## Changelog
 
+### 1.0.1
+
+- Added drag-and-drop reordering of enabled share buttons in the admin
+- Renderer output now respects the saved order
+- Bumped plugin and asset versions for cache-busting
+
 ### 1.0.0
+
 - Complete refactor with modular architecture
 - Improved code organization and readability
 - Enhanced security and performance

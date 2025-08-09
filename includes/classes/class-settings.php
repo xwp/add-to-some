@@ -57,6 +57,7 @@ class Settings {
 			'placement'       => 'bottom', // top|bottom|both.
 			'display_top'     => false,    // Derived flag for UI convenience.
 			'display_bottom'  => true,     // Derived flag for UI convenience.
+			'order'           => array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' ),
 			'buttons'         => array(
 				'pinterest' => false,
 				'facebook'  => true,
@@ -111,7 +112,9 @@ class Settings {
 		// Validate placement.
 		$options['placement'] = $this->validate_placement( $options['placement'] );
 
-		// Normalize buttons.
+
+		// Normalize order then buttons so that order is always a permutation of the known keys.
+		$options['order']   = $this->normalize_order( $options['order'] ?? array(), array_keys( $defaults['buttons'] ) );
 		$options['buttons'] = $this->normalize_buttons( $options['buttons'], $defaults['buttons'] );
 
 		// Normalize Facebook App ID & X handle.
@@ -166,6 +169,36 @@ class Settings {
 	}
 
 	/**
+	 * Normalize order option to ensure it contains each known key exactly once.
+	 *
+	 * @param mixed $order Submitted order.
+	 * @param array $known_keys Known button keys.
+	 * @return array Normalized order.
+	 */
+	private function normalize_order( $order, $known_keys ) {
+		if ( ! is_array( $order ) ) {
+			$order = array();
+		}
+
+		// Keep only known keys and preserve their given order.
+		$filtered = array();
+		foreach ( $order as $key ) {
+			if ( in_array( $key, $known_keys, true ) && ! in_array( $key, $filtered, true ) ) {
+				$filtered[] = $key;
+			}
+		}
+
+		// Append any missing keys in their default order.
+		foreach ( $known_keys as $key ) {
+			if ( ! in_array( $key, $filtered, true ) ) {
+				$filtered[] = $key;
+			}
+		}
+
+		return $filtered;
+	}
+
+	/**
 	 * Sanitize Facebook App ID.
 	 *
 	 * @param mixed $app_id Facebook App ID.
@@ -215,6 +248,18 @@ class Settings {
 			$buttons[ $key ] = ! empty( $input['buttons'][ $key ] );
 		}
 
+		// Sanitize order (comma-separated string or array from client-side JS).
+		$order = array();
+		if ( isset( $input['order'] ) ) {
+			if ( is_array( $input['order'] ) ) {
+				$order = array_map( 'sanitize_text_field', array_map( 'strval', $input['order'] ) );
+			} else {
+				$order = array_filter( array_map( 'trim', explode( ',', (string) $input['order'] ) ) );
+				$order = array_map( 'sanitize_text_field', $order );
+			}
+		}
+		$order = $this->normalize_order( $order, array_keys( $buttons ) );
+
 		// Sanitize Facebook App ID.
 		$facebook_app_id = $this->sanitize_facebook_app_id( $input['facebook_app_id'] ?? '' );
 
@@ -230,6 +275,7 @@ class Settings {
 			'placement'       => $placement,
 			'display_top'     => $display_top,
 			'display_bottom'  => $display_bottom,
+			'order'           => $order,
 			'buttons'         => $buttons,
 			'facebook_app_id' => $facebook_app_id,
 			'x_handle'        => $x_handle,

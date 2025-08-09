@@ -1,6 +1,6 @@
 # AddToSome Share Buttons
 
-A performant, modular WordPress plugin that adds customizable share buttons to your posts and pages. Built with clean, maintainable code following WordPress VIP coding standards.
+A performant, modular WordPress plugin that adds customizable share buttons to your posts and pages. Built with clean, maintainable code.
 
 ## Features
 
@@ -149,8 +149,8 @@ echo $renderer->render();
 
 ## Requirements
 
-- WordPress 5.0 or higher
-- PHP 7.0 or higher
+- WordPress 6.0 or higher
+- PHP 7.4 or higher
 - JavaScript enabled for native sharing
 
 ## Security
@@ -167,7 +167,6 @@ echo $renderer->render();
 - Assets loaded only when needed
 - No render-blocking resources
 - Efficient DOM manipulation
-- Optimized for caching plugins
 
 ## License
 
@@ -183,4 +182,3 @@ For issues, feature requests, or contributions, please use the plugin's support 
 - Complete refactor with modular architecture
 - Improved code organization and readability
 - Enhanced security and performance
-- Full WP VIP standards compliance

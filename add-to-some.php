@@ -7,8 +7,8 @@
  * Author URI: https://xwp.co/
  * License: GPLv2+
  * Text Domain: add-to-some
- * Requires at least: 5.0
- * Requires PHP: 7.0
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
  *
  * @package AddToSome
  */

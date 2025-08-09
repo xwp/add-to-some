@@ -144,7 +144,10 @@ class Frontend {
 			plugins_url( 'js/frontend.js', dirname( __DIR__ ) ),
 			array(),
 			XWP_ADD_TO_SOME_VERSION,
-			true
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
 		);
 	}
 

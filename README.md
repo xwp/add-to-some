@@ -9,6 +9,8 @@ A performant, modular WordPress plugin that adds customizable share buttons to y
   - Facebook sharing (with optional App ID for enhanced dialog)
   - X (formerly Twitter) sharing (with optional handle)
   - Pocket save functionality
+  - LinkedIn share
+  - Reddit share
   - Email sharing with pre-filled content
   - Native browser sharing (Web Share API)
 

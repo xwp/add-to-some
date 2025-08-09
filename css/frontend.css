@@ -16,6 +16,7 @@
 	width: var(--ats-icon-size);
 	height: var(--ats-icon-size);
 	padding: var(--ats-icon-padding);
+	transition: none;
 }
 
 .add-to-some__icon a::before {

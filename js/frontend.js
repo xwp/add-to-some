@@ -60,7 +60,7 @@
 	 * Shows or hides native share links based on browser support.
 	 */
 	function initializeNativeShare() {
-		const shareLinks = document.querySelectorAll( '.xwp-ats-native-share' );
+		const shareLinks = document.querySelectorAll( '.ats-native-share' );
 
 		if ( ! shareLinks.length ) {
 			return;
@@ -80,7 +80,81 @@
 		}
 	}
 
+    /**
+     * Initialize desktop popup behavior for share links.
+     * Applies to non-native share anchors inside the Add-to-Some icons list.
+     */
+    function initializeSharePopup() {
+        // Only on desktop-sized viewports.
+        if ( window.innerWidth < 1024 ) {
+            return;
+        }
+
+        const shareAnchors = document.querySelectorAll( '.add-to-some__icon a' );
+
+        if ( ! shareAnchors.length ) {
+            return;
+        }
+
+        Array.prototype.forEach.call( shareAnchors, function( anchor ) {
+            // Skip native share triggers handled elsewhere.
+            if ( 
+              anchor.classList && 
+              ( anchor.classList.contains( 'ats-native-share' ) || anchor.classList.contains( 'ats-email-share' ) )
+            ) {
+                return;
+            }
+
+            anchor.addEventListener( 'click', function( event ) {
+                // Only handle normal left-click without modifier keys.
+                if ( event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ) {
+                    return;
+                }
+
+                const href = anchor.getAttribute( 'href' );
+                if ( ! href ) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const popupWidth = 600;
+                const popupHeight = 600;
+
+                // Cross-browser offsets for dual-screen setups.
+                const dualScreenLeft = ( window.screenLeft !== undefined ) ? window.screenLeft : ( window.screenX || 0 );
+                const dualScreenTop = ( window.screenTop !== undefined ) ? window.screenTop : ( window.screenY || 0 );
+
+                // Viewport size fallbacks.
+                const viewportWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
+
+                const left = dualScreenLeft + Math.max( 0, ( viewportWidth - popupWidth ) / 2 );
+                const top = dualScreenTop + Math.max( 0, ( viewportHeight - popupHeight ) / 2 );
+
+                const features = [
+                    'menubar=no',
+                    'toolbar=no',
+                    'resizable=yes',
+                    'scrollbars=yes',
+                    'noopener',
+                    'noreferrer',
+                    'height=' + popupHeight,
+                    'width=' + popupWidth,
+                    'left=' + Math.round( left ),
+                    'top=' + Math.round( top ),
+                ].join( ',' );
+
+                const popup = window.open( href, '', features );
+                if ( popup && popup.focus ) {
+                    popup.focus();
+                }
+            }, false );
+        } );
+    }
+
 	// Initialize when DOM is ready
-	domReady( initializeNativeShare );
+    domReady( initializeNativeShare );
+    domReady( initializeSharePopup );
 
 }() );

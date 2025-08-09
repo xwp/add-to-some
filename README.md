@@ -187,6 +187,10 @@ For issues, feature requests, or contributions, please use the plugin's support 
 
 ## Changelog
 
+### 1.0.2
+
+- Open sharer as centred popup on desktop browsers (>1024 in width)
+
 ### 1.0.1
 
 - Added drag-and-drop reordering of enabled share buttons in the admin

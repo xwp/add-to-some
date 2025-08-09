@@ -2,7 +2,7 @@
 /**
  * Plugin Name: AddToSome Share Buttons
  * Description: Performant share buttons for your pages including Pinterest, Facebook, X, Pocket, Email and native sharing.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: XWP
  * Author URI: https://xwp.co/
  * License: GPLv2+
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'XWP_ADD_TO_SOME_VERSION', '1.0.1' );
+define( 'XWP_ADD_TO_SOME_VERSION', '1.0.2' );
 define( 'XWP_ADD_TO_SOME_FILE', __FILE__ );
 define( 'XWP_ADD_TO_SOME_PATH', plugin_dir_path( __FILE__ ) );
 define( 'XWP_ADD_TO_SOME_URL', plugin_dir_url( __FILE__ ) );

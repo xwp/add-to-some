@@ -281,7 +281,7 @@ class ShareButtons {
 		$href = 'mailto:?subject=' . $subject . '&body=' . $body;
 		
 		return sprintf(
-			'<a href="%s" title="%s"></a>',
+			'<a href="%s" title="%s" class="ats-email-share"></a>',
 			esc_url( $href ),
 			esc_attr__( 'Share via Email', 'add-to-some' )
 		);
@@ -315,7 +315,7 @@ class ShareButtons {
 	 */
 	private function generate_native_link() {
 		return sprintf(
-			'<a href="%s" class="xwp-ats-native-share" data-url="%s" data-title="%s" data-text="%s" title="%s"></a>',
+			'<a href="%s" class="ats-native-share" data-url="%s" data-title="%s" data-text="%s" title="%s"></a>',
 			esc_url( $this->post_data['permalink'] ),
 			esc_attr( $this->post_data['permalink'] ),
 			esc_attr( $this->post_data['title'] ),

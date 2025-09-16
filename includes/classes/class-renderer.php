@@ -69,10 +69,17 @@ class Renderer {
 	 */
 	private function get_enabled_buttons() {
 		$enabled = array();
-		$order = isset( $this->options['order'] ) && is_array( $this->options['order'] ) ? $this->options['order'] : array_keys( $this->options['buttons'] );
+		
+		if ( empty( $this->options['buttons'] ) || ! is_array( $this->options['buttons'] ) ) {
+			return $enabled;
+		}
+		
+		$order = ( is_array( $this->options['order'] ?? null ) ) 
+			? $this->options['order'] 
+			: array_keys( $this->options['buttons'] );
 
 		foreach ( $order as $key ) {
-			if ( ! empty( $this->options['buttons'][ $key ] ) ) {
+			if ( ! empty( $this->options['buttons'][ $key ] ?? false ) ) {
 				$enabled[] = $key;
 			}
 		}
@@ -88,10 +95,15 @@ class Renderer {
 	 * @return string HTML markup.
 	 */
 	private function build_html( $enabled_buttons, $links ) {
-		$html = '<div class="add-to-some" style="--ats-icon-size: ' . $this->options['icon_size'] . 'px; --ats-icon-padding: 0.25rem; height: calc( ( var(--ats-icon-padding) * 2 ) + var(--ats-icon-size) ); overflow: hidden; visibility: hidden;">';
+		// Using null coalescing operator for cleaner validation
+		$icon_size = absint( $this->options['icon_size'] ?? 32 );
+		
+		$html = '<div class="add-to-some" style="--ats-icon-size: ' . esc_attr( $icon_size ) . 'px; --ats-icon-padding: 0.25rem; height: calc( ( var(--ats-icon-padding) * 2 ) + var(--ats-icon-size) ); overflow: hidden; visibility: hidden;">';
 		
 		foreach ( (array) $enabled_buttons as $key ) {
-			$html .= '<div class="add-to-some__icon add-to-some__icon--' . $key . '">' . $links[ $key ] . '</div>';
+			if ( isset( $links[ $key ] ) ) {
+				$html .= '<div class="add-to-some__icon add-to-some__icon--' . esc_attr( $key ) . '">' . $links[ $key ] . '</div>';
+			}
 		}
 		
 		$html .= '</div>';

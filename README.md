@@ -187,6 +187,10 @@ For issues, feature requests, or contributions, please use the plugin's support 
 
 ## Changelog
 
+### 1.0.3
+
+- Replace ul/li by div for the template.
+
 ### 1.0.2
 
 - Open sharer as centred popup on desktop browsers (>1024 in width)

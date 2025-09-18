@@ -22,6 +22,9 @@
 	 * @returns {void}
 	 */
 	function toggleSubOptions( row ) {
+		if ( ! ( row instanceof Element ) ) {
+			return;
+		}
 		var checkbox = row.querySelector( 'input[type="checkbox"]' );
 		var subs = row.querySelectorAll( '.xwp-ats-suboptions' );
 		if ( ! checkbox || ! subs.length ) {

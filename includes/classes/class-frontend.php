@@ -59,7 +59,9 @@ class Frontend {
 		$options = $this->settings->get_options();
 		$buttons_html = $this->render_buttons( $options );
 
-		return $this->insert_buttons( $content, $buttons_html, $options['placement'] );
+		$placement = $options['placement'] ?? 'none';
+		
+		return $this->insert_buttons( $content, $buttons_html, $placement );
 	}
 
 	/**
@@ -94,8 +96,10 @@ class Frontend {
 				return $buttons_html . $content;
 			
 			case 'bottom':
-			default:
 				return $content . $buttons_html;
+				
+			default:
+				return $content;
 		}
 	}
 
@@ -130,7 +134,7 @@ class Frontend {
 		);
 
 		// Only enqueue if native sharing is enabled.
-		if ( ! empty( $options['buttons']['native'] ) ) {
+		if ( ! empty( $options['buttons']['native'] ?? false ) ) {
 			$this->enqueue_native_share_script();
 		}
 	}

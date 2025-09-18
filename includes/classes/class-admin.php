@@ -108,7 +108,7 @@ class Admin {
 	public function render_icon_size_field() {
 		$options = $this->settings->get_options();
 		$field_name = esc_attr( Settings::OPTION_KEY . '[icon_size]' );
-		$value = esc_attr( (string) $options['icon_size'] );
+		$value = esc_attr( (string) ( $options['icon_size'] ?? 32 ) );
 		
 		printf(
 			'<label><input name="%s" type="number" min="10" max="300" step="2" class="small-text" value="%s"> %s</label>',
@@ -125,8 +125,10 @@ class Admin {
 		$options = $this->settings->get_options();
 		$button_types = $this->settings->get_button_types();
 
-		// Determine render order using saved options.
-		$order = isset( $options['order'] ) && is_array( $options['order'] ) ? $options['order'] : array_keys( $button_types );
+		// Determine render order using saved options with null coalescing
+		$order = ( is_array( $options['order'] ?? null ) ) 
+			? $options['order'] 
+			: array_keys( $button_types );
 
 		// Hidden input to store order as comma-separated list.
 		$hidden_name  = esc_attr( Settings::OPTION_KEY . '[order]' );
@@ -152,7 +154,7 @@ class Admin {
 	 * @param array  $options Current options.
 	 */
 	private function render_button_option( $key, $label, $options ) {
-		$checked  = ! empty( $options['buttons'][ $key ] ) ? 'checked' : '';
+		$checked  = ! empty( $options['buttons'][ $key ] ?? false ) ? 'checked' : '';
 		$input_id = 'xwp-ats-btn-' . $key;
 		$field_name = esc_attr( Settings::OPTION_KEY . '[buttons][' . $key . ']' );
 
@@ -184,7 +186,7 @@ class Admin {
 	 * @param string $checked Whether Facebook is checked.
 	 */
 	private function render_facebook_suboptions( $options, $checked ) {
-		$app_id = isset( $options['facebook_app_id'] ) ? $options['facebook_app_id'] : '';
+		$app_id = $options['facebook_app_id'] ?? '';
 		$style  = $checked ? '' : ' style="display:none"';
 		$field_name = esc_attr( Settings::OPTION_KEY . '[facebook_app_id]' );
 
@@ -228,7 +230,7 @@ class Admin {
 	 * @param string $checked Whether X is checked.
 	 */
 	private function render_x_suboptions( $options, $checked ) {
-		$handle = isset( $options['x_handle'] ) ? $options['x_handle'] : '';
+		$handle = $options['x_handle'] ?? '';
 		$style  = $checked ? '' : ' style="display:none"';
 		$field_name = esc_attr( Settings::OPTION_KEY . '[x_handle]' );
 
@@ -249,7 +251,7 @@ class Admin {
 	 */
 	public function render_placement_field() {
 		$options = $this->settings->get_options();
-		$placement = $options['placement'];
+		$placement = $options['placement'] ?? 'bottom';
 		$placement_options = $this->settings->get_placement_options();
 		$field_name = esc_attr( Settings::OPTION_KEY . '[placement]' );
 

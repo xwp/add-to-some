@@ -190,6 +190,7 @@ For issues, feature requests, or contributions, please use the plugin's support 
 ### 1.0.3
 
 - Replace ul/li by div for the template.
+- Improve code security, implemented defensive coding techniques.
 
 ### 1.0.2
 

@@ -97,6 +97,10 @@ class ShareButtons {
 	private function get_enabled_buttons() {
 		$enabled = array();
 		
+		if ( empty( $this->options['buttons'] ) || ! is_array( $this->options['buttons'] ) ) {
+			return $enabled;
+		}
+		
 		foreach ( $this->options['buttons'] as $key => $is_enabled ) {
 			if ( $is_enabled ) {
 				$enabled[] = $key;
@@ -137,7 +141,7 @@ class ShareButtons {
 	private function generate_linkedin_link() {
 		$href = add_query_arg(
 			array(
-				'url' => $this->post_data['permalink'],
+				'url' => $this->post_data['permalink'] ?? '',
 			),
 			'https://www.linkedin.com/sharing/share-offsite/'
 		);
@@ -157,8 +161,8 @@ class ShareButtons {
 	private function generate_reddit_link() {
 		$href = add_query_arg(
 			array(
-				'url'   => $this->post_data['permalink'],
-				'title' => $this->post_data['title'],
+				'url'   => $this->post_data['permalink'] ?? '',
+				'title' => $this->post_data['title'] ?? '',
 			),
 			'https://www.reddit.com/submit'
 		);
@@ -191,11 +195,11 @@ class ShareButtons {
 	 * @return string Facebook share URL.
 	 */
 	private function build_facebook_url() {
-		if ( ! empty( $this->options['facebook_app_id'] ) ) {
+		if ( ! empty( $this->options['facebook_app_id'] ?? '' ) ) {
 			return add_query_arg(
 				array(
 					'app_id'  => $this->options['facebook_app_id'],
-					'href'    => $this->post_data['permalink'],
+					'href'    => $this->post_data['permalink'] ?? '',
 					'display' => 'popup',
 				),
 				'https://www.facebook.com/dialog/share'
@@ -204,12 +208,12 @@ class ShareButtons {
 
 		// Fallback to basic sharer.
 		$args = array(
-			'u'       => $this->post_data['permalink'],
-			'title'   => $this->post_data['title'],
-			'summary' => $this->post_data['excerpt'],
+			'u'       => $this->post_data['permalink'] ?? '',
+			'title'   => $this->post_data['title'] ?? '',
+			'summary' => $this->post_data['excerpt'] ?? '',
 		);
 		
-		if ( $this->post_data['image'] ) {
+		if ( ! empty( $this->post_data['image'] ?? '' ) ) {
 			$args['image'] = $this->post_data['image'];
 		}
 		
@@ -222,13 +226,15 @@ class ShareButtons {
 	 * @return string X share link HTML.
 	 */
 	private function generate_x_link() {
+		$permalink = $this->post_data['permalink'] ?? '';
+		
 		$args = array(
-			'original_referer' => $this->post_data['permalink'],
+			'original_referer' => $permalink,
 			'tw_p'             => 'tweetbutton',
-			'url'              => $this->post_data['permalink'],
+			'url'              => $permalink,
 		);
 		
-		if ( ! empty( $this->options['x_handle'] ) ) {
+		if ( ! empty( $this->options['x_handle'] ?? '' ) ) {
 			$args['via'] = $this->options['x_handle'];
 		}
 		
@@ -248,11 +254,11 @@ class ShareButtons {
 	 */
 	private function generate_pinterest_link() {
 		$args = array(
-			'url'         => $this->post_data['permalink'],
-			'description' => $this->post_data['title'],
+			'url'         => $this->post_data['permalink'] ?? '',
+			'description' => $this->post_data['title'] ?? '',
 		);
 		
-		if ( $this->post_data['image'] ) {
+		if ( ! empty( $this->post_data['image'] ?? '' ) ) {
 			$args['media'] = $this->post_data['image'];
 		}
 		
@@ -271,11 +277,15 @@ class ShareButtons {
 	 * @return string Email share link HTML.
 	 */
 	private function generate_email_link() {
-		$subject = rawurlencode( (string) $this->post_data['title'] );
+		$title     = (string) ( $this->post_data['title'] ?? '' );
+		$excerpt   = (string) ( $this->post_data['excerpt'] ?? '' );
+		$permalink = $this->post_data['permalink'] ?? '';
+		
+		$subject = rawurlencode( $title );
 		$body    = rawurlencode( 
-			trim( (string) $this->post_data['excerpt'] ) . 
-			( $this->post_data['excerpt'] ? "\n\n" : '' ) . 
-			$this->post_data['permalink'] 
+			trim( $excerpt ) . 
+			( $excerpt ? "\n\n" : '' ) . 
+			$permalink 
 		);
 		
 		$href = 'mailto:?subject=' . $subject . '&body=' . $body;
@@ -295,8 +305,8 @@ class ShareButtons {
 	private function generate_pocket_link() {
 		$href = add_query_arg(
 			array(
-				'url'   => $this->post_data['permalink'],
-				'title' => $this->post_data['title'],
+				'url'   => $this->post_data['permalink'] ?? '',
+				'title' => $this->post_data['title'] ?? '',
 			),
 			'https://getpocket.com/save'
 		);
@@ -314,12 +324,16 @@ class ShareButtons {
 	 * @return string Native share link HTML.
 	 */
 	private function generate_native_link() {
+		$permalink = $this->post_data['permalink'] ?? '';
+		$title     = $this->post_data['title'] ?? '';
+		$excerpt   = (string) ( $this->post_data['excerpt'] ?? '' );
+		
 		return sprintf(
 			'<a href="%s" class="ats-native-share" data-url="%s" data-title="%s" data-text="%s" title="%s"></a>',
-			esc_url( $this->post_data['permalink'] ),
-			esc_attr( $this->post_data['permalink'] ),
-			esc_attr( $this->post_data['title'] ),
-			esc_attr( wp_strip_all_tags( (string) $this->post_data['excerpt'] ) ),
+			esc_url( $permalink ),
+			esc_attr( $permalink ),
+			esc_attr( $title ),
+			esc_attr( wp_strip_all_tags( $excerpt ) ),
 			esc_html__( 'Native Share', 'add-to-some' )
 		);
 	}

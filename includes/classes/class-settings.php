@@ -54,7 +54,7 @@ class Settings {
 	public function get_defaults() {
 		return array(
 			'icon_size'       => 32,
-			'placement'       => 'bottom', // top|bottom|both.
+			'placement'       => 'bottom', // top|bottom|both|none.
 			'display_top'     => false,    // Derived flag for UI convenience.
 			'display_bottom'  => true,     // Derived flag for UI convenience.
 			'order'           => array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' ),
@@ -142,7 +142,7 @@ class Settings {
 	 * @return string Valid placement.
 	 */
 	private function validate_placement( $placement ) {
-		$valid_placements = array( 'top', 'bottom', 'both' );
+		$valid_placements = array( 'top', 'bottom', 'both', 'none' );
 		return in_array( $placement, $valid_placements, true ) ? $placement : 'bottom';
 	}
 
@@ -310,6 +310,7 @@ class Settings {
 			'bottom' => __( 'bottom', 'add-to-some' ),
 			'top'    => __( 'top', 'add-to-some' ),
 			'both'   => __( 'top & bottom', 'add-to-some' ),
+			'none'   => __( 'none', 'add-to-some' ),
 		);
 	}
 }

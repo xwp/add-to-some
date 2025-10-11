@@ -33,6 +33,33 @@ A performant, modular WordPress plugin that adds customizable share buttons to y
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Configure settings under Settings > AddToSome
 
+### Composer Installation
+
+To install the plugin via Composer, follow these steps:
+
+1. **Add the Repository:**
+   - Open your project's `composer.json` file.
+   - Add the following under the `repositories` section:
+
+     ```json
+     "repositories": [
+         {
+             "type": "vcs",
+             "url": "https://github.com/xwp/add-to-some"
+         }
+     ]
+     ```
+
+2. **Require the Plugin:**
+   - Run the following command in your terminal:
+
+     ```bash
+     composer require xwp/add-to-some
+     ```
+
+3. **Activate the Plugin:**
+   - Once installed, activate the plugin through the 'Plugins' menu in WordPress.
+
 ## Configuration
 
 ### Basic Settings

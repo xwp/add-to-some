@@ -54,7 +54,7 @@ class Settings {
 	public function get_defaults() {
 		return array(
 			'icon_size'        => 32,
-			'placement'        => 'bottom', // top|bottom|both|none.
+			'placement'        => 'bottom', // Top, bottom, both or none.
 			'display_top'      => false,    // Derived flag for UI convenience.
 			'display_bottom'   => true,     // Derived flag for UI convenience.
 			'order'            => array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' ),

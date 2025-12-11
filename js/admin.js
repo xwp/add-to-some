@@ -107,7 +107,7 @@
 
 			var rect = target.getBoundingClientRect();
 			var before = ( event.clientY - rect.top ) < ( rect.height / 2 );
-			container.insertBefore( dragSrc, before ? target : target.nextSibling );
+			container.insertBefore( dragSrc, before ? target : target.nextSibling ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.insertBefore -- Moving existing DOM element, no new HTML insertion.
 		}
 
 		/**

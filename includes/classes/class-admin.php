@@ -28,6 +28,13 @@ class Admin {
 	private $settings;
 
 	/**
+	 * Hook suffix for the admin page.
+	 *
+	 * @var string
+	 */
+	private $hook_suffix;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Settings $settings Settings instance.
@@ -43,6 +50,10 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
 	}
+
+	/**
+	 * Register settings and admin page.
+	 */
 
 	/**
 	 * Register settings and admin page.
@@ -74,6 +85,15 @@ class Admin {
 			'xwp_add_to_some_main'
 		);
 
+		// Custom icon color field.
+		add_settings_field(
+			'custom_icon_color',
+			__( 'Custom Icon Color', 'add-to-some' ),
+			array( $this, 'render_custom_icon_color_field' ),
+			'xwp_add_to_some',
+			'xwp_add_to_some_main'
+		);
+
 		// Share buttons field.
 		add_settings_field(
 			'buttons',
@@ -93,7 +113,8 @@ class Admin {
 		);
 
 		// Add options page.
-		add_options_page(
+		// Add options page.
+		$this->hook_suffix = add_options_page(
 			__( 'AddToSome Settings', 'add-to-some' ),
 			__( 'AddToSome', 'add-to-some' ),
 			'manage_options',
@@ -116,6 +137,23 @@ class Admin {
 			$value,
 			esc_html__( 'pixels', 'add-to-some' )
 		);
+	}
+
+	/**
+	 * Render custom icon color field.
+	 */
+	public function render_custom_icon_color_field() {
+		$options = $this->settings->get_options();
+		$field_name = esc_attr( Settings::OPTION_KEY . '[custom_icon_color]' );
+		$value = esc_attr( $options['custom_icon_color'] ?? '' );
+		
+		printf(
+			'<input name="%s" type="text" class="xwp-ats-color-picker" value="%s" data-default-color="" />',
+			$field_name,
+			$value
+		);
+		
+		echo '<p class="description">' . esc_html__( 'Leave empty to use default platform colors. When set, this color will be used as the background for all share icons.', 'add-to-some' ) . '</p>';
 	}
 
 	/**
@@ -267,6 +305,7 @@ class Admin {
 		}
 		
 		echo '</select>';
+		echo '<p class="description">' . esc_html__( 'Choose where share buttons appear automatically. Select "none (manual placement)" to add the share buttons block manually in the editor where you want it to appear.', 'add-to-some' ) . '</p>';
 	}
 
 	/**
@@ -275,14 +314,17 @@ class Admin {
 	 * @param string $hook_suffix Current admin page hook suffix.
 	 */
 	public function enqueue_admin_assets( $hook_suffix ) {
-		if ( 'settings_page_add-to-some' !== $hook_suffix ) {
+		if ( $this->hook_suffix !== $hook_suffix ) {
 			return;
 		}
+
+		// Enqueue WordPress color picker.
+		wp_enqueue_style( 'wp-color-picker' );
 
 		wp_enqueue_script(
 			'xwp-add-to-some-admin',
 			plugins_url( 'js/admin.js', dirname( __DIR__ ) ),
-			array(),
+			array( 'wp-color-picker' ),
 			XWP_ADD_TO_SOME_VERSION,
 			true
 		);

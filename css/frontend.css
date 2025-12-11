@@ -44,42 +44,42 @@
 }
 
 .add-to-some__icon--pinterest a::before {
-	background-color: #E60023;
+	background-color: var(--add-to-some-background, #E60023);
 	background-image: url( '../images/pinterest.svg' );
 }
 
 .add-to-some__icon--facebook a::before {
-	background-color: #1877F2;
+	background-color: var(--add-to-some-background, #1877F2);
 	background-image: url( '../images/facebook.svg' );
 }
 
 .add-to-some__icon--x a::before {
-	background-color: #000;
+	background-color: var(--add-to-some-background, #000);
 	background-image: url( '../images/x.svg' );
 }
 
 .add-to-some__icon--pocket a::before {
-	background-color: #EF4444;
+	background-color: var(--add-to-some-background, #EF4444);
 	background-image: url( '../images/pocket.svg' );
 }
 
 .add-to-some__icon--linkedin a::before {
-	background-color: #0A66C2;
+	background-color: var(--add-to-some-background, #0A66C2);
 	background-image: url( '../images/linkedin.svg' );
 }
 
 .add-to-some__icon--reddit a::before {
-	background-color: #FF4500;
+	background-color: var(--add-to-some-background, #FF4500);
 	background-image: url( '../images/reddit.svg' );
 }
 
 .add-to-some__icon--email a::before {
-	background-color: #8E8E93;
+	background-color: var(--add-to-some-background, #8E8E93);
 	background-image: url( '../images/email.svg' );
 }
 
 .add-to-some__icon--native a::before {
-	background-color: #2196F3;
+	background-color: var(--add-to-some-background, #2196F3);
 	background-size: auto 80%;
 	background-image: url( '../images/native.svg' );
 }

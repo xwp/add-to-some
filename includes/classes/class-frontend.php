@@ -43,6 +43,7 @@ class Frontend {
 		add_filter( 'the_content', array( $this, 'filter_content' ), 98 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_assets' ) );
 		add_filter( 'style_loader_tag', array( $this, 'filter_style_loader_tag' ), 10, 4 );
+		add_action( 'wp_head', array( $this, 'output_custom_styles' ) );
 	}
 
 	/**
@@ -172,5 +173,27 @@ class Frontend {
 		$html = str_replace( '/>', ' onload="this.media=\'all\'" />', $html );
 
 		return $html;
+	}
+
+	/**
+	 * Output custom inline styles for icon color override.
+	 */
+	public function output_custom_styles() {
+		if ( is_admin() || ! is_singular( 'post' ) ) {
+			return;
+		}
+
+		$options = $this->settings->get_options();
+		$custom_color = $options['custom_icon_color'] ?? '';
+
+		// Only output styles if a custom color is set.
+		if ( empty( $custom_color ) ) {
+			return;
+		}
+
+		printf(
+			'<style id="xwp-add-to-some-custom-color">:root{--add-to-some-background:%s;}</style>',
+			esc_attr( $custom_color )
+		);
 	}
 }

@@ -49,6 +49,13 @@ class Plugin {
 	private $frontend;
 
 	/**
+	 * Block instance.
+	 *
+	 * @var Block
+	 */
+	private $block;
+
+	/**
 	 * Plugin file path.
 	 *
 	 * @var string
@@ -87,7 +94,7 @@ class Plugin {
 
 		// Initialize components.
 		$this->settings = Settings::get_instance();
-		
+
 		// Initialize admin functionality.
 		if ( is_admin() ) {
 			$this->admin = new Admin( $this->settings );
@@ -97,6 +104,10 @@ class Plugin {
 		// Initialize frontend functionality.
 		$this->frontend = new Frontend( $this->settings );
 		$this->frontend->init();
+
+		// Initialize block functionality.
+		$this->block = new Block( $this->settings );
+		$this->block->init();
 
 		// Add plugin action links.
 		add_filter(
@@ -129,9 +140,9 @@ class Plugin {
 			esc_url( $settings_url ),
 			esc_html__( 'Settings', 'add-to-some' )
 		);
-		
+
 		array_unshift( $links, $settings_link );
-		
+
 		return $links;
 	}
 
@@ -160,5 +171,14 @@ class Plugin {
 	 */
 	public function get_frontend() {
 		return $this->frontend;
+	}
+
+	/**
+	 * Get block instance.
+	 *
+	 * @return Block
+	 */
+	public function get_block() {
+		return $this->block;
 	}
 }

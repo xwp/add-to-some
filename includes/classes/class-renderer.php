@@ -52,14 +52,54 @@ class Renderer {
 	 */
 	public function render() {
 		$enabled_buttons = $this->get_enabled_buttons();
-		
+
 		if ( empty( $enabled_buttons ) ) {
 			return '';
 		}
 
 		$links = $this->share_buttons->generate_links();
-		
+
 		return $this->build_html( $enabled_buttons, $links );
+	}
+
+	/**
+	 * Render preview of share buttons for editor.
+	 * Uses placeholder URLs for realistic layout preview.
+	 *
+	 * @return string Rendered HTML with placeholder links.
+	 */
+	public function render_preview() {
+		$enabled_buttons = $this->get_enabled_buttons();
+
+		if ( empty( $enabled_buttons ) ) {
+			return '<div class="add-to-some-preview-empty">No share buttons enabled. <a href="' . esc_url( admin_url( 'options-general.php?page=add-to-some' ) ) . '" target="_blank">Configure buttons</a></div>';
+		}
+
+		$preview_links = $this->generate_preview_links( $enabled_buttons );
+
+		return $this->build_html( $enabled_buttons, $preview_links );
+	}
+
+	/**
+	 * Generate preview links with placeholder URLs.
+	 *
+	 * @param array $enabled_buttons Enabled button keys.
+	 * @return array Preview links.
+	 */
+	private function generate_preview_links( $enabled_buttons ) {
+		$links = array();
+
+		foreach ( $enabled_buttons as $key ) {
+			$class = ( 'email' === $key ) ? ' class="ats-email-share"' : '';
+			$class = ( 'native' === $key ) ? ' class="ats-native-share"' : $class;
+
+			$links[ $key ] = sprintf(
+				'<a href="#"%s></a>',
+				$class
+			);
+		}
+
+		return $links;
 	}
 
 	/**
@@ -69,13 +109,13 @@ class Renderer {
 	 */
 	private function get_enabled_buttons() {
 		$enabled = array();
-		
+
 		if ( empty( $this->options['buttons'] ) || ! is_array( $this->options['buttons'] ) ) {
 			return $enabled;
 		}
-		
-		$order = ( is_array( $this->options['order'] ?? null ) ) 
-			? $this->options['order'] 
+
+		$order = ( is_array( $this->options['order'] ?? null ) )
+			? $this->options['order']
 			: array_keys( $this->options['buttons'] );
 
 		foreach ( $order as $key ) {
@@ -83,7 +123,7 @@ class Renderer {
 				$enabled[] = $key;
 			}
 		}
-		
+
 		return $enabled;
 	}
 
@@ -97,15 +137,15 @@ class Renderer {
 	private function build_html( $enabled_buttons, $links ) {
 		// Using null coalescing operator for cleaner validation
 		$icon_size = absint( $this->options['icon_size'] ?? 32 );
-		
+
 		$html = '<div class="add-to-some" style="--ats-icon-size: ' . esc_attr( $icon_size ) . 'px; --ats-icon-padding: 0.25rem; height: calc( ( var(--ats-icon-padding) * 2 ) + var(--ats-icon-size) ); overflow: hidden; visibility: hidden;">';
-		
+
 		foreach ( (array) $enabled_buttons as $key ) {
 			if ( isset( $links[ $key ] ) ) {
 				$html .= '<div class="add-to-some__icon add-to-some__icon--' . esc_attr( $key ) . '">' . $links[ $key ] . '</div>';
 			}
 		}
-		
+
 		$html .= '</div>';
 
 		return $html;

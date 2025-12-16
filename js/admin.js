@@ -1,19 +1,5 @@
-(function(){
+( function( $ ) {
 	'use strict';
-
-	/**
-	 * Run a callback after DOM is ready.
-	 *
-	 * @param {Function} callback Function to run once DOM is interactive/complete.
-	 * @returns {void}
-	 */
-	function ready( callback ) {
-		if ( document.readyState !== 'loading' ) {
-			callback();
-		} else {
-			document.addEventListener( 'DOMContentLoaded', callback );
-		}
-	}
 
 	/**
 	 * Toggle visibility of sub-options within a row according to its checkbox state.
@@ -121,7 +107,7 @@
 
 			var rect = target.getBoundingClientRect();
 			var before = ( event.clientY - rect.top ) < ( rect.height / 2 );
-			container.insertBefore( dragSrc, before ? target : target.nextSibling );
+			container.insertBefore( dragSrc, before ? target : target.nextSibling ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.insertBefore -- Moving existing DOM element, no new HTML insertion.
 		}
 
 		/**
@@ -157,11 +143,27 @@
 		}
 	}
 
-	ready( function initAdminShareButtons() {
-		var rows = document.querySelectorAll( '.xwp-ats-row' );
-		for ( var i = 0; i < rows.length; i++ ) {
-			toggleSubOptions( rows[ i ] );
+	/**
+	 * Initialize WordPress color picker.
+	 *
+	 * @returns {void}
+	 */
+	function initColorPicker() {
+		// With jQuery wrapper, $ is available and document is ready.
+		// We still check for the plugin to be safe.
+		if ( typeof $.fn.wpColorPicker === 'undefined' ) {
+			return;
 		}
-		makeReorderable();
-	} );
-})();
+		
+		$( '.xwp-ats-color-picker' ).wpColorPicker();
+	}
+
+	// Initialize when DOM is ready (jQuery wrapper ensures this).
+	var rows = document.querySelectorAll( '.xwp-ats-row' );
+	for ( var i = 0; i < rows.length; i++ ) {
+		toggleSubOptions( rows[ i ] );
+	}
+	makeReorderable();
+	initColorPicker();
+
+} )( jQuery );

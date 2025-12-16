@@ -28,6 +28,13 @@ class Admin {
 	private $settings;
 
 	/**
+	 * Hook suffix for the admin page.
+	 *
+	 * @var string
+	 */
+	private $hook_suffix;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Settings $settings Settings instance.
@@ -74,6 +81,15 @@ class Admin {
 			'xwp_add_to_some_main'
 		);
 
+		// Custom icon color field.
+		add_settings_field(
+			'custom_icon_color',
+			__( 'Custom Icon Color', 'add-to-some' ),
+			array( $this, 'render_custom_icon_color_field' ),
+			'xwp_add_to_some',
+			'xwp_add_to_some_main'
+		);
+
 		// Share buttons field.
 		add_settings_field(
 			'buttons',
@@ -93,7 +109,7 @@ class Admin {
 		);
 
 		// Add options page.
-		add_options_page(
+		$this->hook_suffix = add_options_page(
 			__( 'AddToSome Settings', 'add-to-some' ),
 			__( 'AddToSome', 'add-to-some' ),
 			'manage_options',
@@ -106,23 +122,40 @@ class Admin {
 	 * Render icon size field.
 	 */
 	public function render_icon_size_field() {
-		$options = $this->settings->get_options();
-		$field_name = esc_attr( Settings::OPTION_KEY . '[icon_size]' );
-		$value = esc_attr( (string) ( $options['icon_size'] ?? 32 ) );
+		$options    = $this->settings->get_options();
+		$field_name = Settings::OPTION_KEY . '[icon_size]';
+		$value      = (string) ( $options['icon_size'] ?? 32 );
 		
 		printf(
 			'<label><input name="%s" type="number" min="10" max="300" step="2" class="small-text" value="%s"> %s</label>',
-			$field_name,
-			$value,
+			esc_attr( $field_name ),
+			esc_attr( $value ),
 			esc_html__( 'pixels', 'add-to-some' )
 		);
+	}
+
+	/**
+	 * Render custom icon color field.
+	 */
+	public function render_custom_icon_color_field() {
+		$options    = $this->settings->get_options();
+		$field_name = Settings::OPTION_KEY . '[custom_icon_color]';
+		$value      = $options['custom_icon_color'] ?? '';
+		
+		printf(
+			'<input name="%s" type="text" class="xwp-ats-color-picker" value="%s" data-default-color="" />',
+			esc_attr( $field_name ),
+			esc_attr( $value )
+		);
+		
+		echo '<p class="description">' . esc_html__( 'Leave empty to use default platform colors. When set, this color will be used as the background for all share icons.', 'add-to-some' ) . '</p>';
 	}
 
 	/**
 	 * Render buttons field.
 	 */
 	public function render_buttons_field() {
-		$options = $this->settings->get_options();
+		$options      = $this->settings->get_options();
 		$button_types = $this->settings->get_button_types();
 
 		// Determine render order using saved options with null coalescing
@@ -130,11 +163,15 @@ class Admin {
 			? $options['order'] 
 			: array_keys( $button_types );
 
-		// Hidden input to store order as comma-separated list.
-		$hidden_name  = esc_attr( Settings::OPTION_KEY . '[order]' );
-		$hidden_value = esc_attr( implode( ',', $order ) );
+		$hidden_name  = Settings::OPTION_KEY . '[order]';
+		$hidden_value = implode( ',', $order );
 
-		echo '<input type="hidden" id="xwp-ats-order" name="' . $hidden_name . '" value="' . $hidden_value . '" />';
+		printf(
+			'<input type="hidden" id="xwp-ats-order" name="%s" value="%s" />',
+			esc_attr( $hidden_name ),
+			esc_attr( $hidden_value )
+		);
+
 		echo '<fieldset id="xwp-ats-buttons" style="display:grid; gap:10px; max-width:560px">';
 		
 		foreach ( $order as $key ) {
@@ -154,18 +191,22 @@ class Admin {
 	 * @param array  $options Current options.
 	 */
 	private function render_button_option( $key, $label, $options ) {
-		$checked  = ! empty( $options['buttons'][ $key ] ?? false ) ? 'checked' : '';
-		$input_id = 'xwp-ats-btn-' . $key;
-		$field_name = esc_attr( Settings::OPTION_KEY . '[buttons][' . $key . ']' );
+		$checked    = ! empty( $options['buttons'][ $key ] ?? false ) ? 'checked' : '';
+		$input_id   = 'xwp-ats-btn-' . $key;
+		$field_name = Settings::OPTION_KEY . '[buttons][' . $key . ']';
+		printf(
+			'<div class="xwp-ats-row xwp-ats-row-%s" draggable="true" data-key="%s">',
+			esc_attr( $key ),
+			esc_attr( $key )
+		);
 
-		echo '<div class="xwp-ats-row xwp-ats-row-' . esc_attr( $key ) . '" draggable="true" data-key="' . esc_attr( $key ) . '">';
 		echo '<span class="xwp-ats-handle" aria-label="' . esc_attr__( 'Drag to reorder', 'add-to-some' ) . '" style="cursor:move; user-select:none; margin-right:8px;">↕︎</span> ';
 		
 		printf(
 			'<label><input id="%s" type="checkbox" name="%s" value="1" %s> %s</label>',
 			esc_attr( $input_id ),
-			$field_name,
-			$checked,
+			esc_attr( $field_name ),
+			esc_attr( $checked ),
 			esc_html( $label )
 		);
 
@@ -186,16 +227,18 @@ class Admin {
 	 * @param string $checked Whether Facebook is checked.
 	 */
 	private function render_facebook_suboptions( $options, $checked ) {
-		$app_id = $options['facebook_app_id'] ?? '';
-		$style  = $checked ? '' : ' style="display:none"';
-		$field_name = esc_attr( Settings::OPTION_KEY . '[facebook_app_id]' );
+		$app_id     = $options['facebook_app_id'] ?? '';
+		$field_name = Settings::OPTION_KEY . '[facebook_app_id]';
 
-		echo '<div class="xwp-ats-suboptions xwp-ats-facebook-app-id"' . $style . '>';
+		printf(
+			'<div class="xwp-ats-suboptions xwp-ats-facebook-app-id" %s>',
+			$checked ? '' : 'style="display:none"'
+		);
 		
 		printf(
 			'<label>%s: <input type="text" class="regular-text" name="%s" value="%s" placeholder="123456789012345" /></label>',
 			esc_html__( 'Facebook App ID', 'add-to-some' ),
-			$field_name,
+			esc_attr( $field_name ),
 			esc_attr( $app_id )
 		);
 
@@ -208,19 +251,29 @@ class Admin {
 	 * Render Facebook help text.
 	 */
 	private function render_facebook_help_text() {
-		$facebook_doc_url = 'https://developers.facebook.com/docs/development/create-an-app/';
+		$facebook_doc_url        = 'https://developers.facebook.com/docs/development/create-an-app/';
 		$facebook_developers_url = 'https://developers.facebook.com/';
 		
 		// translators: 1: <a> tag open to developers.facebook.com, 2: </a>, 3: <a> tag open to documentation, 4: </a>.
 		$description = sprintf(
-			__( 'Without an APP ID, it falls back to basic share. Go to %1$sdevelopers.facebook.com%2$s - My Apps - Create App (Consumer), give it a name and copy the App ID. (%3$sFacebook documentation%4$s).', 'add-to-some' ),
+			/* translators: 1: link open, 2: link close, 3: link open, 4: link close */
+			esc_html__( 'Without an APP ID, it falls back to basic share. Go to %1$sdevelopers.facebook.com%2$s - My Apps - Create App (Consumer), give it a name and copy the App ID. (%3$sFacebook documentation%4$s).', 'add-to-some' ),
 			'<a href="' . esc_url( $facebook_developers_url ) . '" target="_blank" rel="noopener">',
 			'</a>',
 			'<a href="' . esc_url( $facebook_doc_url ) . '" target="_blank" rel="noopener">',
 			'</a>'
 		);
 		
-		echo '<p class="description">' . $description . '</p>';
+		echo '<p class="description">' . wp_kses( 
+			$description, 
+			array( 
+				'a' => array( 
+					'href' => array(), 
+					'target' => array(), 
+					'rel' => array() 
+				) 
+			) 
+		) . '</p>';
 	}
 
 	/**
@@ -230,16 +283,18 @@ class Admin {
 	 * @param string $checked Whether X is checked.
 	 */
 	private function render_x_suboptions( $options, $checked ) {
-		$handle = $options['x_handle'] ?? '';
-		$style  = $checked ? '' : ' style="display:none"';
-		$field_name = esc_attr( Settings::OPTION_KEY . '[x_handle]' );
+		$handle     = $options['x_handle'] ?? '';
+		$field_name = Settings::OPTION_KEY . '[x_handle]';
 
-		echo '<div class="xwp-ats-suboptions xwp-ats-x-handle"' . $style . '>';
+		printf(
+			'<div class="xwp-ats-suboptions xwp-ats-x-handle" %s>',
+			$checked ? '' : 'style="display:none"'
+		);
 		
 		printf(
 			'<label style="display:block; margin:6px 0 0 26px">%s: @ <input type="text" class="regular-text" name="%s" value="%s" placeholder="yoursite" /></label>',
 			esc_html__( 'X handle to share via', 'add-to-some' ),
-			$field_name,
+			esc_attr( $field_name ),
 			esc_attr( $handle )
 		);
 		
@@ -250,12 +305,12 @@ class Admin {
 	 * Render placement field.
 	 */
 	public function render_placement_field() {
-		$options = $this->settings->get_options();
-		$placement = $options['placement'] ?? 'bottom';
+		$options           = $this->settings->get_options();
+		$placement         = $options['placement'] ?? 'bottom';
 		$placement_options = $this->settings->get_placement_options();
-		$field_name = esc_attr( Settings::OPTION_KEY . '[placement]' );
+		$field_name        = Settings::OPTION_KEY . '[placement]';
 
-		echo '<select name="' . $field_name . '">';
+		printf( '<select name="%s">', esc_attr( $field_name ) );
 		
 		foreach ( $placement_options as $value => $label ) {
 			printf(
@@ -267,6 +322,7 @@ class Admin {
 		}
 		
 		echo '</select>';
+		echo '<p class="description">' . esc_html__( 'Choose where share buttons appear automatically. Select "none (manual placement)" to add the share buttons block manually in the editor where you want it to appear.', 'add-to-some' ) . '</p>';
 	}
 
 	/**
@@ -275,14 +331,16 @@ class Admin {
 	 * @param string $hook_suffix Current admin page hook suffix.
 	 */
 	public function enqueue_admin_assets( $hook_suffix ) {
-		if ( 'settings_page_add-to-some' !== $hook_suffix ) {
+		if ( $this->hook_suffix !== $hook_suffix ) {
 			return;
 		}
+
+		wp_enqueue_style( 'wp-color-picker' );
 
 		wp_enqueue_script(
 			'xwp-add-to-some-admin',
 			plugins_url( 'js/admin.js', dirname( __DIR__ ) ),
-			array(),
+			array( 'wp-color-picker' ),
 			XWP_ADD_TO_SOME_VERSION,
 			true
 		);
@@ -299,7 +357,7 @@ class Admin {
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html__( 'AddToSome Settings', 'add-to-some' ); ?></h1>
-			<form method="post" action="options.php">
+			<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
 				<?php
 				settings_fields( 'xwp_add_to_some' );
 				do_settings_sections( 'xwp_add_to_some' );

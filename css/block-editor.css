@@ -1,0 +1,42 @@
+/**
+ * Block Editor Styles for Add-to-Some Share Buttons Block
+ *
+ * @package AddToSome
+ * @since 1.1.0
+ */
+
+/* Make preview buttons non-clickable in editor */
+.add-to-some-block-preview .add-to-some a {
+	pointer-events: none;
+	cursor: default;
+}
+
+/* Empty state styling */
+.add-to-some-preview-empty {
+	padding: 20px;
+	text-align: center;
+	color: #666;
+	font-size: 14px;
+	background: #fff;
+	border: 2px dashed #ddd;
+	border-radius: 4px;
+}
+
+.add-to-some-preview-empty a {
+	color: #2271b1;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.add-to-some-preview-empty a:hover {
+	color: #135e96;
+	text-decoration: underline;
+}
+
+/* Sidebar settings link */
+.add-to-some-settings-link {
+	display: inline-flex;
+	align-items: center;
+	margin-top: 8px;
+	font-weight: 500;
+}

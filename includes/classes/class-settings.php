@@ -53,12 +53,12 @@ class Settings {
 	 */
 	public function get_defaults() {
 		return array(
-			'icon_size'       => 32,
-			'placement'       => 'bottom', // top|bottom|both|none.
-			'display_top'     => false,    // Derived flag for UI convenience.
-			'display_bottom'  => true,     // Derived flag for UI convenience.
-			'order'           => array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' ),
-			'buttons'         => array(
+			'icon_size'        => 32,
+			'placement'        => 'bottom', // Top, bottom, both or none.
+			'display_top'      => false,    // Derived flag for UI convenience.
+			'display_bottom'   => true,     // Derived flag for UI convenience.
+			'order'            => array( 'pinterest', 'facebook', 'x', 'pocket', 'linkedin', 'reddit', 'email', 'native' ),
+			'buttons'          => array(
 				'pinterest' => false,
 				'facebook'  => true,
 				'x'         => true,
@@ -68,8 +68,9 @@ class Settings {
 				'email'     => true,
 				'native'    => true,
 			),
-			'facebook_app_id' => '',
-			'x_handle'        => '',
+			'facebook_app_id'  => '',
+			'x_handle'         => '',
+			'custom_icon_color' => '',
 		);
 	}
 
@@ -120,6 +121,9 @@ class Settings {
 		// Normalize Facebook App ID & X handle.
 		$options['facebook_app_id'] = $this->sanitize_facebook_app_id( $options['facebook_app_id'] ?? '' );
 		$options['x_handle']        = $this->sanitize_x_handle( $options['x_handle'] ?? '' );
+
+		// Normalize custom icon color.
+		$options['custom_icon_color'] = $this->sanitize_color( $options['custom_icon_color'] ?? '' );
 
 		return $options;
 	}
@@ -222,6 +226,34 @@ class Settings {
 	}
 
 	/**
+	 * Sanitize color value.
+	 *
+	 * @param mixed $color Color value.
+	 * @return string Sanitized color (hex format or empty string).
+	 */
+	private function sanitize_color( $color ) {
+		$color = (string) $color;
+		$color = trim( $color );
+
+		// Return empty string if no color provided.
+		if ( empty( $color ) ) {
+			return '';
+		}
+
+		// Ensure color starts with #.
+		if ( '#' !== substr( $color, 0, 1 ) ) {
+			$color = '#' . $color;
+		}
+
+		// Validate hex color format (3 or 6 hex digits).
+		if ( preg_match( '/^#([a-f0-9]{3}|[a-f0-9]{6})$/i', $color ) ) {
+			return strtoupper( $color );
+		}
+
+		return '';
+	}
+
+	/**
 	 * Sanitize options from request.
 	 *
 	 * @param array $input Input data to sanitize.
@@ -266,19 +298,23 @@ class Settings {
 		// Sanitize X handle.
 		$x_handle = $this->sanitize_x_handle( $input['x_handle'] ?? '' );
 
+		// Sanitize custom icon color.
+		$custom_icon_color = $this->sanitize_color( $input['custom_icon_color'] ?? '' );
+
 		// Derived convenience flags.
 		$display_top    = in_array( $placement, array( 'top', 'both' ), true );
 		$display_bottom = in_array( $placement, array( 'bottom', 'both' ), true );
 
 		return array(
-			'icon_size'       => $icon_size,
-			'placement'       => $placement,
-			'display_top'     => $display_top,
-			'display_bottom'  => $display_bottom,
-			'order'           => $order,
-			'buttons'         => $buttons,
-			'facebook_app_id' => $facebook_app_id,
-			'x_handle'        => $x_handle,
+			'icon_size'         => $icon_size,
+			'placement'         => $placement,
+			'display_top'       => $display_top,
+			'display_bottom'    => $display_bottom,
+			'order'             => $order,
+			'buttons'           => $buttons,
+			'facebook_app_id'   => $facebook_app_id,
+			'x_handle'          => $x_handle,
+			'custom_icon_color' => $custom_icon_color,
 		);
 	}
 
@@ -310,7 +346,7 @@ class Settings {
 			'bottom' => __( 'bottom', 'add-to-some' ),
 			'top'    => __( 'top', 'add-to-some' ),
 			'both'   => __( 'top & bottom', 'add-to-some' ),
-			'none'   => __( 'none', 'add-to-some' ),
+			'none'   => __( 'none (manual placement)', 'add-to-some' ),
 		);
 	}
 }

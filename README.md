@@ -16,10 +16,11 @@ A performant, modular WordPress plugin that adds customizable share buttons to y
 
 - **Customization Options**
   - Adjustable icon size (10-300 pixels)
-  - Flexible placement (top, bottom, or both)
+  - Flexible placement (as a Gutenberg block, before or after the post content, or in both places)
   - Per-service enable/disable toggles
   - Reorder enabled buttons via drag-and-drop in the admin
   - Platform-specific configuration
+  - Multiple block instances supported for different content sections
 
 - **Performance Optimized**
   - Lazy loading of assets
@@ -66,7 +67,24 @@ To install the plugin via Composer, follow these steps:
 
 - **Icon Style**: Set the size of share button icons (10-300 pixels)
 - **Share Buttons**: Enable/disable individual sharing services
-- **Placement**: Choose where buttons appear on single posts
+- **Placement on single posts**: Choose where buttons appear automatically:
+  - `top` - Above post content
+  - `bottom` - Below post content (default)
+  - `both` - Above and below post content
+  - `none (manual placement)` - No automatic placement; use the *Add to Some - Share Buttons* block in the editor
+
+### Using the Share Buttons Block
+
+The plugin includes a Gutenberg block for manual placement:
+
+1. In the post/page editor, click the **+** button to add a block
+2. Search for "Share Buttons"
+3. Insert the block wherever you want share buttons to appear
+4. The block shows a preview of your configured buttons in the editor
+5. Configure button settings via Settings > AddToSome (link available in block sidebar)
+6. You can add multiple Share Buttons blocks in different locations
+
+**Note**: When using the block, set Placement to "none (manual placement)" to prevent automatic insertion at top/bottom.
 
 ### Advanced Options
 

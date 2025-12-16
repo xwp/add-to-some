@@ -82,6 +82,10 @@ class ShareButtons {
 		
 		if ( '' === $raw_excerpt ) {
 			$raw_content = get_post_field( 'post_content', $post_id );
+			
+			// Performance: Limit content to 500 characters before stripping tags to avoid heavy regex on large posts.
+			$raw_content = substr( $raw_content, 0, 500 );
+			
 			$stripped    = wp_strip_all_tags( $raw_content );
 			$raw_excerpt = wp_trim_words( $stripped, 40, '' );
 		}
